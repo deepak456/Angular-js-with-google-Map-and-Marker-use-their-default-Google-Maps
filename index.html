@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html ng-app="plunker">
+
+  <head>
+    <meta charset="utf-8" />
+    <title>vsHandyStorage Plunker</title>
+    <script>document.write('<base href="' + document.location + '" />');</script>
+    <link data-require="bootstrap-css" data-semver="3.3.1" rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="style.css" />
+    <script data-require="angular.js@1.3.x" src="https://code.angularjs.org/1.3.15/angular.js" data-semver="1.3.15"></script>
+    
+    <!-- Google Maps JavaScript API -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    
+    <!-- vsGoogleAutocomplete -->
+    <script src="vs-google-autocomplete.js"></script>
+    
+    <!-- validator for autocomplete -->
+    <script src="vs-autocomplete-validator.js"></script>
+    
+    <script src="app.js"></script>
+  </head>
+
+
+  <!-- 
+  * Dependency: Google Maps JavaScript API v3
+  * Google Maps API info: https://developers.google.com/maps/documentation/javascript/places-autocomplete
+  * Simple usage: 
+  *   1. add <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places"></script>
+  *   2. add vs-google-autocomplete.js
+  *   3. add vs-google-autocomplete directive to input field
+  * Validator usage:
+  *   1. add vs-autocomplete-validator.js
+  *   2. add vs-autocomplete-validator directive to input field
+  -->
+  <body ng-controller="MainCtrl">
+    <div class="container">
+      
+      <h3>Example of vsGoogleAutocomplete module <u>with validator</u></h3>
+      <h5>Also look at <a href="http://plnkr.co/edit/sdcIaQ?p=preview">simple usage</a> of this module without embedded validator</h5>
+      
+      <form name="addrForm">
+
+        <!-- 
+        * Example: vs-autocomplete-validator
+        * Info: checks if place is valid Google address (default config)
+        -->
+        <div ng-class="{'form-group':true, 'has-error':addrForm.place.$dirty && addrForm.place.$invalid}">
+          <label for="place" class="control-label">Place</label>
+          <input  vs-google-autocomplete
+                 vs-autocomplete-validator
+                 
+                 ng-model="places" 
+data-ng-blur="search(places)";
+                 type="text"
+                 name="place"
+                 id="place"
+                 class="form-control" 
+                 placeholder="Enter any address">
+          <span class="help-block"><b><u>Valid</u>: </b>{{addrForm.place.$valid}}</span>
+          <span class="help-block"><b><u>NgModelController.$error</u>: </b>{{addrForm.place.$error}}</span>
+          <span class="help-block"><b><u>NgModelController.vsAutocompleteErorr</u>: </b>{{addrForm.place.vsAutocompleteErorr}}</span>
+          <span class="help-block"><b>Model: </b>{{places}}</span>
+        </div>
+        
+        <!-- 
+        * Example: vs-autocomplete-validator="vs-street-address"
+        * Info: checks if place is full street address (street number, street, ...)
+        -->
+        <div ng-class="{'form-group':true, 'has-error':addrForm.streetNumber.$dirty && addrForm.streetNumber.$invalid}">
+          <label for="streetNumber" class="control-label">Street number</label>
+          <input vs-google-autocomplete="{ types: ['address'] }"
+                 vs-autocomplete-validator="vs-street-address"
+                 ng-model="streetNumber.name"
+                 vs-place="streetNumber.place" 
+                 vs-place-id="streetNumber.components.placeId"
+                 vs-street-number="streetNumber.components.streetNumber" 
+                 vs-street="streetNumber.components.street"
+                 vs-city="streetNumber.components.city"
+                 vs-state="streetNumber.components.state"
+                 vs-country-short="streetNumber.components.countryCode"
+                 vs-country="streetNumber.components.country"
+                 vs-post-code="address.components.postCode"
+                 vs-district="address.components.district"
+                 vs-latitude="streetNumber.components.location.lat"
+                 vs-longitude="streetNumber.components.location.long"
+                 
+                 type="text" 
+                 name="streetNumber"
+                 id="streetNumber"
+                 class="form-control" 
+                 placeholder="Enter full address (street number, street, ...)">
+          
+          <!-- validation info -->
+          <span class="help-block"><b><u>Valid</u>: </b>{{addrForm.streetNumber.$valid}}</span>
+          <span class="help-block"><b><u>NgModelController.$error</u>: </b>{{addrForm.streetNumber.$error}}</span>
+          <span class="help-block"><b><u>NgModelController.vsAutocompleteErorr</u>: </b>{{addrForm.streetNumber.vsAutocompleteErorr}}</span>
+          
+          <!-- model -->
+          <span class="help-block"><b>Model: </b>{{streetNumber.name}}</span>
+          <span class="help-block"><b>Place id: </b>{{streetNumber.components.placeId}}</span>
+          <span class="help-block"><b>Street number: </b>{{streetNumber.components.streetNumber}}</span>
+          <span class="help-block"><b>Street: </b>{{streetNumber.components.street}}</span>
+          <span class="help-block"><b>City: </b>{{streetNumber.components.city}}</span>
+          <span class="help-block"><b>State: </b>{{streetNumber.components.state}}</span>
+          <span class="help-block"><b>Country code: </b>{{streetNumber.components.countryCode}}</span>
+          <span class="help-block"><b>Country: </b>{{streetNumber.components.country}}</span>
+          <span class="help-block"><b>Postcode: </b>{{address.components.postCode}}</span>
+          <span class="help-block"><b>District: </b>{{address.components.district}}</span>
+          <span class="help-block"><b>Latitude: </b>{{streetNumber.components.location.lat}}</span>
+          <span class="help-block"><b>Longitude: </b>{{streetNumber.components.location.long}}</span>
+          
+          <pre class="help-block"><b>Place: </b>{{streetNumber.place | json}}</pre>
+        </div>
+        
+      </form>
+
+    </div>
+  <div id="map"></div>
+  </body>
+
+</html>
+
